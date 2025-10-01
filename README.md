@@ -8,6 +8,7 @@ This is the API responsible for managing products inventory.
 
 - Node.js
 - TypeScript
+- Sequelize
 - Express
 - Jest
 
