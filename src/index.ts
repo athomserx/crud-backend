@@ -16,28 +16,17 @@ const app = express();
 app.use(express.json());
 app.use(cors());
 
-const initializeDatabase = async () => {
+const verifyDatabaseConnection = async () => {
   try {
     await sequelize.authenticate();
     console.log("Connected to the database successfully.");
-
-    await sequelize.sync({ force: false });
-    console.log("Models synchronized with the database.");
-
-    for (const roleName of Object.values(UserRole)) {
-      await Role.findOrCreate({
-        where: { name: roleName },
-        defaults: { name: roleName } as CreationAttributes<Role>,
-      });
-    }
-    console.log("Roles verified/created.");
   } catch (error) {
-    console.error("Error connecting or synchronizing the database:", error);
+    console.error("Error connecting to the database:", error);
     process.exit(1);
   }
 };
 
-initializeDatabase();
+verifyDatabaseConnection();
 
 // Routes
 app.use("/api/products", productRoutes);
@@ -46,5 +35,4 @@ app.use("/api/audit", auditRoutes);
 
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
-  initializeDatabase();
 });
